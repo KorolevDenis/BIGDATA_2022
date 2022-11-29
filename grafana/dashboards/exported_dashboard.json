@@ -1,0 +1,1590 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 4,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "vANYp6O4z"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 24,
+      "options": {
+        "basemap": {
+          "config": {},
+          "name": "Layer 0",
+          "type": "osm-standard"
+        },
+        "controls": {
+          "mouseWheelZoom": true,
+          "showAttribution": true,
+          "showDebug": false,
+          "showMeasure": false,
+          "showScale": false,
+          "showZoom": true
+        },
+        "layers": [
+          {
+            "config": {
+              "showLegend": true,
+              "style": {
+                "color": {
+                  "field": "count",
+                  "fixed": "dark-green"
+                },
+                "opacity": 0.3,
+                "rotation": {
+                  "fixed": 0,
+                  "max": 360,
+                  "min": -360,
+                  "mode": "mod"
+                },
+                "size": {
+                  "field": "count",
+                  "fixed": 5,
+                  "max": 15,
+                  "min": 7
+                },
+                "symbol": {
+                  "fixed": "img/icons/marker/circle.svg",
+                  "mode": "fixed"
+                },
+                "textConfig": {
+                  "fontSize": 12,
+                  "offsetX": 0,
+                  "offsetY": 0,
+                  "textAlign": "center",
+                  "textBaseline": "middle"
+                }
+              }
+            },
+            "filterData": {
+              "id": "byRefId",
+              "options": "A"
+            },
+            "location": {
+              "lookup": "country",
+              "mode": "lookup"
+            },
+            "name": "Layer 1",
+            "opacity": 1,
+            "tooltip": true,
+            "type": "markers"
+          }
+        ],
+        "tooltip": {
+          "mode": "details"
+        },
+        "view": {
+          "allLayers": true,
+          "id": "zero",
+          "lat": 0,
+          "lon": 0,
+          "zoom": 1
+        }
+      },
+      "pluginVersion": "9.2.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "vANYp6O4z"
+          },
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  current_date AS Time,\r\n  a.country AS Country,\r\n  count(*) AS Count\r\nFROM \r\n  publication_author pa\r\nINNER JOIN \r\n  publication p\r\n  ON p.id = pa.publication_id\r\nINNER JOIN \r\n  affiliation a\r\n\tON a.id = pa.affiliation_id\r\nINNER JOIN publication_subject ps\r\n\tON p.id = ps.publication_id\r\nINNER JOIN subject su\r\n\tON su.id = ps.subject_id\r\n  WHERE\r\n  ('$subject' <> 'ALL' and su.short_name = '$subject' or '$subject' = 'ALL' and su.short_name <> '')\r\n\t  and ('$year'= 'All' and date_part('year', p.cover_date::timestamp)::text <> '' or '$year' <> 'All' and date_part('year'::text, p.cover_date::timestamp)::text = '$year')\r\nGROUP BY \r\n  a.country",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "top stran",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "time": true
+            },
+            "indexByName": {},
+            "renameByName": {}
+          }
+        }
+      ],
+      "type": "geomap"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "vANYp6O4z"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 50,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "always",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "displayName": "Country = $country , City = $city , University = $university , Subject = $subject , Year = $year",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "9.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "vANYp6O4z"
+          },
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  $__time(s.year),\r\n  s.avg_size\r\nFROM (\r\n  SELECT date_trunc('year', p.cover_date::timestamp) AS \"year\",\r\n         avg((NULLIF(substring(substring(page_range from POSITION('-' IN page_range) + 1) from '^(\\d+)(\\D.*)?$'), '')::numeric -\r\n\t\t\t   NULLIF(substring(page_range from '^(\\d+)(-.*)?$'), '')::numeric)) AS \"avg_size\"\r\n  FROM publication p\r\n  INNER JOIN \r\n    publication_author pa\r\n    ON p.id = pa.publication_id\r\n  INNER JOIN \r\n    affiliation a\r\n  \tON a.id = pa.affiliation_id\r\n  INNER JOIN publication_subject ps\r\n  \tON p.id = ps.publication_id\r\n  INNER JOIN subject su\r\n  \tON su.id = ps.subject_id\r\n  WHERE\r\n  \t(a.country = '$country' or '$country' = 'All') and ('$subject' <> 'ALL' and su.short_name = '$subject' or '$subject' = 'ALL' and su.short_name <> '')\r\n      and (a.city = '$city' or '$city' = 'All') and (a.name = '$university' or '$university' = 'All')\r\n  GROUP BY date_trunc('year', p.cover_date::timestamp)\r\n  ORDER BY date_trunc('year', p.cover_date::timestamp)\r\n) s\r\nWHERE\r\n  $__timeFilter(s.year)",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Статистика среднего размера публикаций по годам",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "vANYp6O4z"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          },
+          "displayName": "County = $country , City = $city , University = $university , Subject = $subject , Year = $year",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 6,
+      "options": {
+        "barRadius": 0.05,
+        "barWidth": 0.9,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "xField": "month",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "9.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "vANYp6O4z"
+          },
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  $__time(current_date),\r\n  date_part('month', p.cover_date::timestamp) AS \"month\",\r\n  count(*) AS \"amount\"\r\nFROM\r\n  publication p\r\nINNER JOIN \r\n  publication_author pa\r\n  ON p.id = pa.publication_id\r\nINNER JOIN \r\n  affiliation a\r\n\tON a.id = pa.affiliation_id\r\nINNER JOIN publication_subject ps\r\n\tON p.id = ps.publication_id\r\nINNER JOIN subject su\r\n\tON su.id = ps.subject_id\r\nWHERE\r\n\t(a.country = '$country' or '$country' = 'All') and ('$subject' <> 'ALL' and su.short_name = '$subject' or '$subject' = 'ALL' and su.short_name <> '')\r\n    and (a.city = '$city' or '$city' = 'All') and (a.name = '$university' or '$university' = 'All')\r\n      and ('$year'= 'All' and date_part('year', p.cover_date::timestamp)::text <> '' or '$year' <> 'All' and date_part('year'::text, p.cover_date::timestamp)::text = '$year')\r\nGROUP BY\r\n  date_part('month', p.cover_date::timestamp)\r\nORDER BY\r\n  date_part('month', p.cover_date::timestamp)",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Cтатистика популярности месяцев по количеству публикаций",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "vANYp6O4z"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "id": 8,
+      "options": {
+        "displayMode": "gradient",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "pluginVersion": "9.2.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "vANYp6O4z"
+          },
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  $__time(current_date),\r\n  s.short_name AS \"subject\",\r\n  count(*) AS \" \"\r\nFROM\r\n  publication_subject ps\r\nINNER JOIN publication p\r\n  ON ps.publication_id = p.id\r\nINNER JOIN subject s\r\n  ON ps.subject_id = s.id\r\nINNER JOIN \r\n  publication_author pa\r\n  ON p.id = pa.publication_id\r\nINNER JOIN \r\n  affiliation a\r\n\tON a.id = pa.affiliation_id\r\nWHERE\r\n\t(a.country = '$country' or '$country' = 'All')\r\n    and (a.city = '$city' or '$city' = 'All') and (a.name = '$university' or '$university' = 'All')\r\n      and ('$year'= 'All' and date_part('year', p.cover_date::timestamp)::text <> '' or '$year' <> 'All' and date_part('year'::text, p.cover_date::timestamp)::text = '$year')\r\nGROUP BY\r\n  s.short_name\r\nORDER BY\r\n  s.short_name",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Статистика популярности областей по количеству публикаций",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {
+              "  AGRI": 15,
+              "  ARTS": 16,
+              "  BIOC": 4,
+              "  BUSI": 17,
+              "  CENG": 18,
+              "  CHEM": 7,
+              "  COMP": 2,
+              "  DECI": 13,
+              "  DENT": 14,
+              "  EART": 10,
+              "  ECON": 12,
+              "  ENER": 11,
+              "  ENGI": 1,
+              "  ENVI": 19,
+              "  HEAL": 20,
+              "  IMMU": 21,
+              "  MATE": 5,
+              "  MATH": 22,
+              "  MEDI": 0,
+              "  MULT": 23,
+              "  NEUR": 24,
+              "  NURS": 25,
+              "  PHAR": 26,
+              "  PHYS": 3,
+              "  PSYC": 8,
+              "  SOCI": 6,
+              "  VETE": 27,
+              "Time": 9
+            },
+            "renameByName": {}
+          }
+        }
+      ],
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "vANYp6O4z"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 14
+      },
+      "id": 12,
+      "options": {
+        "displayMode": "gradient",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "pluginVersion": "9.2.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "vANYp6O4z"
+          },
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  $__time(current_date),\r\n  fl.name AS metric,\r\n  count(*) AS value\r\nFROM\r\n  publication_freetoread_label pfl\r\nINNER JOIN freetoread_label fl\r\n  ON pfl.freetoread_label_id = fl.id\r\nWHERE\r\n  $__timeFilter(current_date)\r\nGROUP BY\r\n  fl.name",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Cтатистика количества публикаций по типу документов категории Open Access",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {
+              "All Open Access": 1,
+              "Bronze": 3,
+              "Gold": 4,
+              "Green": 2,
+              "Hybrid Gold": 5,
+              "Time": 0
+            },
+            "renameByName": {
+              "Green": ""
+            }
+          }
+        }
+      ],
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "vANYp6O4z"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "  false"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "  true"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
+      "id": 14,
+      "options": {
+        "displayLabels": [
+          "name",
+          "percent"
+        ],
+        "legend": {
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true,
+          "values": [
+            "value",
+            "percent"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "",
+          "values": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "9.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "vANYp6O4z"
+          },
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  $__time(current_date),\r\n  count(pfl.*) AS \"OpenAccess\",\r\n  (count(p.*) - count(pfl.*)) AS \"CloseAccess\"\r\nFROM\r\n  publication_freetoread_label pfl\r\nFULL JOIN publication p\r\n  ON pfl.publication_id = p.id\r\nWHERE\r\n  $__timeFilter(current_date)",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Cтатистика количества публикаций в зависимости от нахождения публикации в открытом доступе",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "vANYp6O4z"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 24
+      },
+      "id": 16,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "vANYp6O4z"
+          },
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  $__time(s.year),\r\n  s.amount AS \"Country\"\r\nFROM (\r\n  SELECT date_trunc('year', p.cover_date::timestamp) AS \"year\",\r\n         count(*) AS \"amount\"\r\n  FROM publication_author pa\r\n  INNER JOIN publication p\r\n\tON p.id = pa.publication_id\r\n  INNER JOIN affiliation a\r\n\tON a.id = pa.affiliation_id\r\n\tINNER JOIN publication_subject ps\r\n\tON p.id = ps.publication_id\r\n\tINNER JOIN subject su\r\n\tON su.id = ps.subject_id\r\n  WHERE\r\n\t(a.country = '$country' or '$country' = 'All') and ('$subject' <> 'ALL' and su.short_name = '$subject' or '$subject' = 'ALL' and su.short_name <> '')\r\n  GROUP BY date_trunc('year', p.cover_date::timestamp)\r\n  ORDER BY date_trunc('year', p.cover_date::timestamp)\r\n) s\r\nWHERE\r\n  $__timeFilter(s.year)",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "vANYp6O4z"
+          },
+          "format": "time_series",
+          "group": [],
+          "hide": false,
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  $__time(s.year),\r\n  s.amount AS \"City\"\r\nFROM (\r\n  SELECT date_trunc('year', p.cover_date::timestamp) AS \"year\",\r\n         count(*) AS \"amount\"\r\n  FROM publication_author pa\r\n  INNER JOIN publication p\r\n\tON p.id = pa.publication_id\r\n  INNER JOIN affiliation a\r\n\tON a.id = pa.affiliation_id\r\n\tINNER JOIN publication_subject ps\r\n\tON p.id = ps.publication_id\r\n\tINNER JOIN subject su\r\n\tON su.id = ps.subject_id\r\n  WHERE\r\n  (a.country = '$country' or '$country' = 'All') and ('$subject' <> 'ALL' and su.short_name = '$subject' or '$subject' = 'ALL' and su.short_name <> '')\r\n\t  and (a.city = '$city' or '$city' = 'All')\r\n  GROUP BY date_trunc('year', p.cover_date::timestamp)\r\n  ORDER BY date_trunc('year', p.cover_date::timestamp)\r\n) s\r\nWHERE\r\n  $__timeFilter(s.year)",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "vANYp6O4z"
+          },
+          "format": "time_series",
+          "group": [],
+          "hide": false,
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  $__time(s.year),\r\n  s.amount AS \"University\"\r\nFROM (\r\n  SELECT date_trunc('year', p.cover_date::timestamp) AS \"year\",\r\n         count(*) AS \"amount\"\r\n  FROM publication_author pa\r\n  INNER JOIN publication p\r\n\tON p.id = pa.publication_id\r\n  INNER JOIN affiliation a\r\n\tON a.id = pa.affiliation_id\r\n\tINNER JOIN publication_subject ps\r\n\tON p.id = ps.publication_id\r\n\tINNER JOIN subject su\r\n\tON su.id = ps.subject_id\r\n  WHERE\r\n  (a.country = '$country' or '$country' = 'All') and ('$subject' <> 'ALL' and su.short_name = '$subject' or '$subject' = 'ALL' and su.short_name <> '')\r\n\t  and (a.city = '$city' or '$city' = 'All')\r\n\t    and (a.name = '$university' or '$university' = 'All')\r\n  GROUP BY date_trunc('year', p.cover_date::timestamp)\r\n  ORDER BY date_trunc('year', p.cover_date::timestamp)\r\n) s\r\nWHERE\r\n  $__timeFilter(s.year)",
+          "refId": "C",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Анализ изменения популярности университетов/городов/стран",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "vANYp6O4z"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          },
+          "displayName": "Subject = $subject , Year = $year",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 32
+      },
+      "id": 18,
+      "options": {
+        "barRadius": 0.05,
+        "barWidth": 0.97,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "vANYp6O4z"
+          },
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  current_date AS Time,\r\n  a.country AS Country,\r\n  count(*) AS Count\r\nFROM \r\n  publication_author pa\r\nINNER JOIN \r\n  publication p\r\n  ON p.id = pa.publication_id\r\nINNER JOIN \r\n  affiliation a\r\n\tON a.id = pa.affiliation_id\r\nINNER JOIN publication_subject ps\r\n\tON p.id = ps.publication_id\r\nINNER JOIN subject su\r\n\tON su.id = ps.subject_id\r\n  WHERE\r\n  ('$subject' <> 'ALL' and su.short_name = '$subject' or '$subject' = 'ALL' and su.short_name <> '')\r\n\t  and ('$year'= 'All' and date_part('year', p.cover_date::timestamp)::text <> '' or '$year' <> 'All' and date_part('year'::text, p.cover_date::timestamp)::text = '$year')\r\nGROUP BY \r\n  a.country\r\nORDER BY Count DESC\r\nLIMIT 10",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Топ стран",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "vANYp6O4z"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          },
+          "displayName": "Country = $country , Subject = $subject , Year = $year",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 40
+      },
+      "id": 20,
+      "options": {
+        "barRadius": 0.05,
+        "barWidth": 0.97,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "vANYp6O4z"
+          },
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  current_date AS Time,\r\n  a.city AS City,\r\n  count(*) AS Count\r\nFROM \r\n  publication_author pa\r\nINNER JOIN \r\n  publication p\r\n  ON p.id = pa.publication_id\r\nINNER JOIN \r\n  affiliation a\r\n\tON a.id = pa.affiliation_id\r\nINNER JOIN publication_subject ps\r\n\tON p.id = ps.publication_id\r\nINNER JOIN subject su\r\n\tON su.id = ps.subject_id\r\n  WHERE\r\n\t(a.country = '$country' or '$country' = 'All') and ('$subject' <> 'ALL' and su.short_name = '$subject' or '$subject' = 'ALL' and su.short_name <> '')\r\n\t  and ('$year'= 'All' and date_part('year', p.cover_date::timestamp)::text <> '' or '$year' <> 'All' and date_part('year'::text, p.cover_date::timestamp)::text = '$year')\r\n      and a.city IS NOT NULL\r\nGROUP BY \r\n  a.city\r\nORDER BY Count DESC\r\nLIMIT 10",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Топ городов",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "vANYp6O4z"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 48
+      },
+      "id": 22,
+      "options": {
+        "barRadius": 0.05,
+        "barWidth": 0.85,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "horizontal",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "9.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "vANYp6O4z"
+          },
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  current_date AS Time,\r\n  a.name AS Univercity,\r\n  count(*) AS Count\r\nFROM \r\n  publication_author pa\r\nINNER JOIN \r\n  publication p\r\n  ON p.id = pa.publication_id\r\nINNER JOIN \r\n  affiliation a\r\n\tON a.id = pa.affiliation_id\r\nINNER JOIN publication_subject ps\r\n\tON p.id = ps.publication_id\r\nINNER JOIN subject su\r\n\tON su.id = ps.subject_id\r\nWHERE\r\n\t(a.country = '$country' or '$country' = 'All') and ('$subject' <> 'ALL' and su.short_name = '$subject' or '$subject' = 'ALL' and su.short_name <> '')\r\n    and (a.city = '$city' or '$city' = 'All')\r\n      and ('$year'= 'All' and date_part('year', p.cover_date::timestamp)::text <> '' or '$year' <> 'All' and date_part('year'::text, p.cover_date::timestamp)::text = '$year')\r\nGROUP BY \r\n  a.name\r\nORDER BY Count DESC\r\nLIMIT 10",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Топ университетов",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "vANYp6O4z"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 56
+      },
+      "id": 25,
+      "options": {
+        "barRadius": 0.05,
+        "barWidth": 0.85,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "horizontal",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "9.2.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "vANYp6O4z"
+          },
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  au.name AS Author,\r\n  count(*) AS Count\r\nFROM \r\n  publication_author_2004 pa\r\nINNER JOIN \r\n  publication_2004 p\r\n  ON p.id = pa.publication_id\r\nINNER JOIN \r\n  author au\r\n  ON au.id = pa.author_id\r\nINNER JOIN \r\n  affiliation a\r\n\tON a.id = pa.affiliation_id\r\nINNER JOIN publication_subject_2004 ps\r\n\tON p.id = ps.publication_id\r\nINNER JOIN subject su\r\n\tON su.id = ps.subject_id\r\nWHERE\r\n\t('$subject' <> 'ALL' and su.short_name = '$subject' or '$subject' = 'ALL' and su.short_name <> '')\r\n    and \r\n    a.name like '%Peter the Great St. Petersburg Polytechnic University%'\r\n      --and ('$year'= 'All'or '$year' <> 'All' and date_part('year'::text, p.cover_date::timestamp)::text = '$year')\r\nGROUP BY \r\n  au.name\r\nORDER BY Count DESC\r\nLIMIT 10",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Топ авторов Политех",
+      "type": "barchart"
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 37,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "Russian Federation",
+          "value": "Russian Federation"
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "NH7nDvDVk"
+        },
+        "definition": "SELECT DISTINCT country FROM affiliation",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Select Country",
+        "multi": false,
+        "name": "country",
+        "options": [],
+        "query": "SELECT DISTINCT country FROM affiliation",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Saint Petersburg",
+          "value": "Saint Petersburg"
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "NH7nDvDVk"
+        },
+        "definition": "SELECT DISTINCT city FROM affiliation WHERE country = '$country' or country = 'All' ",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Select City",
+        "multi": false,
+        "name": "city",
+        "options": [],
+        "query": "SELECT DISTINCT city FROM affiliation WHERE country = '$country' or country = 'All' ",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Peter the Great St. Petersburg Polytechnic University",
+          "value": "Peter the Great St. Petersburg Polytechnic University"
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "NH7nDvDVk"
+        },
+        "definition": "SELECT DISTINCT name FROM affiliation WHERE city = '$city' or city= 'All' ",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Select University",
+        "multi": false,
+        "name": "university",
+        "options": [],
+        "query": "SELECT DISTINCT name FROM affiliation WHERE city = '$city' or city= 'All' ",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "COMP",
+          "value": "COMP"
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "NH7nDvDVk"
+        },
+        "definition": "SELECT DISTINCT short_name FROM subject",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Select Subject",
+        "multi": false,
+        "name": "subject",
+        "options": [],
+        "query": "SELECT DISTINCT short_name FROM subject",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "All"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Year",
+        "multi": false,
+        "name": "year",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "All"
+          },
+          {
+            "selected": false,
+            "text": "2000",
+            "value": "2000"
+          },
+          {
+            "selected": false,
+            "text": "2001",
+            "value": "2001"
+          },
+          {
+            "selected": false,
+            "text": "2002",
+            "value": "2002"
+          },
+          {
+            "selected": false,
+            "text": "2003",
+            "value": "2003"
+          },
+          {
+            "selected": false,
+            "text": "2004",
+            "value": "2004"
+          },
+          {
+            "selected": false,
+            "text": "2005",
+            "value": "2005"
+          },
+          {
+            "selected": false,
+            "text": "2006",
+            "value": "2006"
+          },
+          {
+            "selected": false,
+            "text": "2007",
+            "value": "2007"
+          },
+          {
+            "selected": false,
+            "text": "2008",
+            "value": "2008"
+          },
+          {
+            "selected": false,
+            "text": "2009",
+            "value": "2009"
+          },
+          {
+            "selected": false,
+            "text": "2010",
+            "value": "2010"
+          },
+          {
+            "selected": false,
+            "text": "2011",
+            "value": "2011"
+          },
+          {
+            "selected": false,
+            "text": "2012",
+            "value": "2012"
+          },
+          {
+            "selected": false,
+            "text": "2013",
+            "value": "2013"
+          },
+          {
+            "selected": false,
+            "text": "2014",
+            "value": "2014"
+          },
+          {
+            "selected": false,
+            "text": "2015",
+            "value": "2015"
+          },
+          {
+            "selected": false,
+            "text": "2016",
+            "value": "2016"
+          },
+          {
+            "selected": false,
+            "text": "2017",
+            "value": "2017"
+          },
+          {
+            "selected": false,
+            "text": "2018",
+            "value": "2018"
+          },
+          {
+            "selected": false,
+            "text": "2019",
+            "value": "2019"
+          },
+          {
+            "selected": false,
+            "text": "2020",
+            "value": "2020"
+          },
+          {
+            "selected": false,
+            "text": "2021",
+            "value": "2021"
+          },
+          {
+            "selected": false,
+            "text": "2022",
+            "value": "2022"
+          }
+        ],
+        "query": "All, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "1999-12-31T21:00:00.000Z",
+    "to": "2023-01-02T21:02:00.000Z"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Big Data Visualization 1 Copy: year",
+  "uid": "52jdh6O4k",
+  "version": 1,
+  "weekStart": ""
+}
