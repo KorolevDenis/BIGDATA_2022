@@ -1,0 +1,60 @@
+version: '3'
+
+services:
+    postgres:
+        build: postgres
+        restart: always
+        environment:
+          POSTGRES_USER: ${POSTGRES_USER}
+          POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+          POSTGRES_DB: ${POSTGRES_DB}
+        logging:
+          options:
+            max-size: 10m
+            max-file: "3"
+        ports:
+          - '5432:5432'
+        volumes: 
+          - database_data:/var/lib/postgresql/data
+
+    firefox:
+        image: selenium/node-firefox:latest
+        shm_size: 2gb
+        depends_on:
+          - selenium-hub
+        environment:
+          - SE_EVENT_BUS_HOST=selenium-hub
+          - SE_EVENT_BUS_PUBLISH_PORT=4442
+          - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+          
+    firefox:
+        image: selenium/node-firefox:latest
+        shm_size: 2gb
+        depends_on:
+          - selenium-hub
+        environment:
+          - SE_EVENT_BUS_HOST=selenium-hub
+          - SE_EVENT_BUS_PUBLISH_PORT=4442
+          - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+          
+    firefox:
+        image: selenium/node-firefox:latest
+        shm_size: 2gb
+        depends_on:
+          - selenium-hub
+        environment:
+          - SE_EVENT_BUS_HOST=selenium-hub
+          - SE_EVENT_BUS_PUBLISH_PORT=4442
+          - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+
+    selenium-hub:
+        image: selenium/hub:latest
+        container_name: selenium-hub
+        ports:
+          - "4442:4442"
+          - "4443:4443"
+          - "4444:4444"
+          
+volumes:
+  database_data:
+    driver: local

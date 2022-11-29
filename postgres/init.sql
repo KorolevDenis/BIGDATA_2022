@@ -1,19 +1,3 @@
-drop table journal CASCADE;
-drop table publication_author CASCADE;
-drop table publication CASCADE;
-drop table name_variant CASCADE;
-drop table author CASCADE;
-drop table affiliation CASCADE;
-drop table publication_subject CASCADE;
-drop table subject CASCADE;
-drop table freetoread CASCADE;
-drop table freetoread_label CASCADE;
-drop table publication_freetoread CASCADE;
-drop table publication_freetoread_label CASCADE;
-drop table current_affiliation CASCADE;
-drop table publication_citations CASCADE;
-drop table journal_subject CASCADE;
-
 CREATE TABLE affiliation (
 	id bigserial CONSTRAINT affiliation_pkey PRIMARY KEY,
 	afid bigint,
