@@ -89,8 +89,6 @@ class WebScopusSpider(scrapy.Spider):
     def start_requests(self):
         self.logger.info("adawdawd")
         date = self.right_date - self.proc_number
-        self.proc_count = 1
-        self.logger.info("in requests")
         try:
             req_count = 0
             offset_count = 0
