@@ -38,10 +38,6 @@ class WebScopusSpider(scrapy.Spider):
         self.subjects = json.loads(domains)
 
         try:
-            self.logger.info("sadad")
-            #USERNAME = args[0]
-            #PASSWORD = args[1]
-
             myProxy = "8.219.97.248:80"
 
             proxy = Proxy({
@@ -74,12 +70,12 @@ class WebScopusSpider(scrapy.Spider):
             self.proc_number = int(self.subjects[1])
             self.left_date = int(self.subjects[2])
             self.right_date = int(self.subjects[3])
-            USERNAME = self.subjects[4]
-            PASSWORD = self.subjects[5]
-            self.hostname = 'localhost'
-            self.username = 'denis'
-            self.password = ''
-            self.database = 'denis'
+            USERNAME = os.getenv('SCOPUS_USERNAME')
+            PASSWORD = os.getenv('SCOPUS_PASSWORD')
+            self.hostname = os.getenv('POSTGRES_HOST')
+            self.username = os.getenv('POSTGRES_USER')
+            self.password = os.getenv('POSTGRES_PASSWORD')
+            self.database = os.getenv('POSTGRES_DB')
 
             self.connection = psycopg2.connect(host=self.hostname, user=self.username, password=self.password, dbname=self.database)
             self.connection.set_client_encoding('UTF8')

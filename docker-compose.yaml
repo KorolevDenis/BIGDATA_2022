@@ -35,6 +35,15 @@ services:
           - "4443:4443"
           - "4444:4444"
 
+    scrapyd:
+      image: easypi/scrapyd
+      ports:
+        - "6800:6800"
+      volumes:
+        - ./data:/var/lib/scrapyd
+        - /usr/local/lib/python3.9/dist-packages
+      restart: unless-stopped
+    
     grafana:
       image: awesome-grafana:latest
       build:

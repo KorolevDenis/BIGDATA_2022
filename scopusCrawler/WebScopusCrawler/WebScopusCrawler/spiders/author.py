@@ -70,10 +70,10 @@ class A:
             self.short_wait = WebDriverWait(self.driver, 5)
             self.shortest_wait = WebDriverWait(self.driver, 2)
   
-            self.hostname = '146.185.240.133'
-            self.username = 'denis'
-            self.password = ''
-            self.database = 'denis'
+            self.hostname = os.getenv('POSTGRES_HOST')
+            self.username = os.getenv('POSTGRES_USER')
+            self.password = os.getenv('POSTGRES_PASSWORD')
+            self.database = os.getenv('POSTGRES_DB')
 
             self.connection = psycopg2.connect(host=self.hostname, user=self.username, password=self.password, dbname=self.database)
             self.connection.set_client_encoding('UTF8')
@@ -97,7 +97,7 @@ class A:
                 print("")
                 self.cur.execute(f"""SELECT link_scopus, link_citedby, eid, publication_{date}.id FROM publication_{date} JOIN publication_author_{date} on 
                                 publication_{date}.id = publication_id JOIN affiliation on affiliation_id = affiliation.id WHERE city LIKE '%Saint Petersburg%' or city LIKE '%Leningrad%' 
-                                ORDER BY id LIMIT {rec_count} OFFSET 15;""")
+                                ORDER BY id LIMIT {rec_count};""")
                 publications = self.cur.fetchall()
                 
                 print(f"active_count() {active_count()}")
