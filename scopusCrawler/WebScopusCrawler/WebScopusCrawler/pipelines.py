@@ -11,10 +11,10 @@ import psycopg2
         
 class WebScopusCrawlerPipeline:
     def __init__(self):
-        self.hostname = 'localhost'
-        self.username = 'denis'
-        self.password = ''
-        self.database = 'denis'
+        self.hostname = os.getenv('POSTGRES_HOST')
+        self.username = os.getenv('POSTGRES_USER')
+        self.password = os.getenv('POSTGRES_PASSWORD')
+        self.database = os.getenv('POSTGRES_DB')
 
         self.connection = psycopg2.connect(host=self.hostname, user=self.username, password=self.password, dbname=self.database)
         self.connection.set_client_encoding('UTF8')
