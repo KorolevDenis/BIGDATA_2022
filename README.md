@@ -14,6 +14,8 @@
 
 Описанные действия выполнялись на операционной системе Ubuntu 22.04
 * Клонировать репозиторий: https://github.com/KorolevDenis/BIGDATA_2022
+* Перейти в директорию проекта: cd ~/BIGDATA_2022
+* Выполнить: docker-compose up -d
 * Перейти в директорию проекта: cd ~/BIGDATA_2022/scopusCrawler
 * Установить зависимости из файла requirements.txt
 * Для запуска API модуля:
