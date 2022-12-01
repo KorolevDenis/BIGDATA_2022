@@ -40,7 +40,7 @@ services:
       ports:
         - "6800:6800"
       volumes:
-        - ./data:/var/lib/scrapyd
+        - /var/lib/scrapyd:/var/lib/scrapyd
         - /usr/local/lib/python3.9/dist-packages
       restart: unless-stopped
     

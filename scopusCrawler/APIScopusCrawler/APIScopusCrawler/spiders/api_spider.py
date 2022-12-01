@@ -13,6 +13,7 @@ import json
 import itertools
 from fake_useragent import UserAgent
 from threading import Thread
+import random
 
 from ..items import *
 
@@ -120,8 +121,11 @@ class ScopusSpider(scrapy.Spider):
             'Accept': 'application/xml'
         }
 
-        self.ua = UserAgent()
-        self.headers['User-Agent'] = self.ua.random
+        #self.ua = UserAgent(verify_ssl=False)
+        self.lines = open('useragents.txt').read().splitlines()
+        myline =random.choice(self.lines)
+
+        self.headers['User-Agent'] = myline
 
         self.results = 0
         self.dates = ['1980', '1990', '2000', '2006', '2010', '2014', '2018', '2018', '2020', '2022']
@@ -137,13 +141,12 @@ class ScopusSpider(scrapy.Spider):
         self.pages = [str(i) for i in range(360)]
 
         for subj in list(subject_dict):
-            yield Request(f"https://api.elsevier.com/content/search/scopus?apiKey={self.api_key}&query=SUBJAREA%28{subj}%29&date={date}",
-                    headers = self.headers, callback = self.parse_cited_by_helper, errback=self.errback, meta = {"subj": subj, "date": date, "query": f"SUBJAREA%28{subj}%29"}, dont_filter=True)
+            yield Request(f"https://api.elsevier.com/content/search/scopus?apiKey={self.api_key}&query=SUBJAREA%28{subj}%29+AND+AFFILCOUNTRY%28Russian%20Federation%29&date={date}",
+                    headers = self.headers, callback = self.parse_cited_by_helper, errback=self.errback, meta = {"subj": subj, "date": date, "query": f"SUBJAREA%28{subj}%29+AND+AFFILCOUNTRY%28Russian%20Federation%29"}, dont_filter=True)
 
-        yield Request(f"https://api.elsevier.com/content/search/scopus?apiKey={self.api_key}&query=NOT+SUBJAREA%28{'%29+AND+NOT+SUBJAREA%28'.join(list(subject_dict))}%29&date={date}",
+        yield Request(f"https://api.elsevier.com/content/search/scopus?apiKey={self.api_key}&query=NOT+SUBJAREA%28{'%29+AND+NOT+SUBJAREA%28'.join(list(subject_dict))}%29+AND+AFFILCOUNTRY%28Russian%20Federation%29&date={date}",
             headers = self.headers, callback = self.parse_start, errback=self.errback, meta = {"subj": 'UND', "date": date,
-            "query": f"NOT+SUBJAREA%28{'%29+AND+NOT+SUBJAREA%28'.join(list(subject_dict))}%29"}, dont_filter=True)
-
+            "query": f"NOT+SUBJAREA%28{'%29+AND+NOT+SUBJAREA%28'.join(list(subject_dict))}%29+AND+AFFILCOUNTRY%28Russian%20Federation%29"}, dont_filter=True)
 
     def errback(self, failure):
         status = failure.value.response.status
@@ -200,7 +203,7 @@ class ScopusSpider(scrapy.Spider):
         else:
             time.sleep(3)
             headers = request.headers
-            headers['User-Agent'] = self.ua.random
+            headers['User-Agent'] = random.choice(self.lines)
 
             yield Request(request.url[:apiKey_find] + self.api_key + request.url[query_find:],
                  headers = headers, callback = request.callback, errback=self.errback, meta = request.meta, dont_filter=True)
@@ -217,7 +220,7 @@ class ScopusSpider(scrapy.Spider):
         total_results = int(tree.find(f".//{{{prefix_dict['ns1']}}}totalResults").text)
         self.logger.info(f"parse_doctype total {total_results} url {url}")
         #self.logger.info(f"header {response.request.headers.get('User-Agent')}")
-        response.request.headers['User-Agent'] = self.ua.random
+        response.request.headers['User-Agent'] = random.choice(self.lines)
 
         if total_results == 0:
             return
@@ -246,7 +249,7 @@ class ScopusSpider(scrapy.Spider):
         total_results = int(tree.find(f".//{{{prefix_dict['ns1']}}}totalResults").text)
         self.logger.info(f"parse_cited_by_helper total {total_results} url {url}")
         #self.logger.info(f"header {response.request.headers.get('User-Agent')}")
-        response.request.headers['User-Agent'] = self.ua.random
+        response.request.headers['User-Agent'] = random.choice(self.lines)
 
         if total_results == 0:
             return
@@ -274,7 +277,7 @@ class ScopusSpider(scrapy.Spider):
         total_results = int(tree.find(f".//{{{prefix_dict['ns1']}}}totalResults").text)
         self.logger.info(f"parse_cited_by total {total_results} url {url}")
         #self.logger.info(f"header {response.request.headers.get('User-Agent')}")
-        response.request.headers['User-Agent'] = self.ua.random
+        response.request.headers['User-Agent'] = random.choice(self.lines)
 
         if total_results == 0:
             return
@@ -347,7 +350,7 @@ class ScopusSpider(scrapy.Spider):
         total_results = int(tree.find(f".//{{{prefix_dict['ns1']}}}totalResults").text)
         self.logger.info(f"parse_cited_by_binary_rec total {total_results} url {url}")
         #self.logger.info(f"header {response.request.headers.get('User-Agent')}")
-        response.request.headers['User-Agent'] = self.ua.random
+        response.request.headers['User-Agent'] = random.choice(self.lines)
 
         if total_results == 0:
             return
@@ -404,7 +407,7 @@ class ScopusSpider(scrapy.Spider):
         total_results = int(tree.find(f".//{{{prefix_dict['ns1']}}}totalResults").text)
         self.logger.info(f"parse_access total {total_results} url {url}")
         #self.logger.info(f"header {response.request.headers.get('User-Agent')}")
-        response.request.headers['User-Agent'] = self.ua.random
+        response.request.headers['User-Agent'] = random.choice(self.lines)
 
         if total_results == 0:
             return
@@ -441,7 +444,7 @@ class ScopusSpider(scrapy.Spider):
         total_results = int(tree.find(f".//{{{prefix_dict['ns1']}}}totalResults").text)
         self.logger.info(f"parse_oas total {total_results} url {url}")
         #self.logger.info(f"header {response.request.headers.get('User-Agent')}")
-        response.request.headers['User-Agent'] = self.ua.random
+        response.request.headers['User-Agent'] = random.choice(self.lines)
 
         if total_results == 0:
             return
@@ -469,7 +472,7 @@ class ScopusSpider(scrapy.Spider):
         total_results = int(tree.find(f".//{{{prefix_dict['ns1']}}}totalResults").text)
         self.logger.info(f"parse_page url {total_results} {url}  ")
         #self.logger.info(f"header {response.request.headers.get('User-Agent')}")
-        response.request.headers['User-Agent'] = self.ua.random
+        response.request.headers['User-Agent'] = random.choice(self.lines)
 
         if total_results == 0:
             return
@@ -499,7 +502,7 @@ class ScopusSpider(scrapy.Spider):
         total_results = int(tree.find(f".//{{{prefix_dict['ns1']}}}totalResults").text)
         self.logger.info(f"parse_page_by_binary_rec total {total_results} url {url}")
         #self.logger.info(f"header {response.request.headers.get('User-Agent')}")
-        response.request.headers['User-Agent'] = self.ua.random
+        response.request.headers['User-Agent'] = random.choice(self.lines)
 
         if total_results == 0:
             return
@@ -552,7 +555,7 @@ class ScopusSpider(scrapy.Spider):
         total_results = int(tree.find(f".//{{{prefix_dict['ns1']}}}totalResults").text)
         self.logger.info(f"parse_page url {total_results} {url}  ")
         #self.logger.info(f"header {response.request.headers.get('User-Agent')}")
-        response.request.headers['User-Agent'] = self.ua.random
+        response.request.headers['User-Agent'] = random.choice(self.lines)
 
         if total_results == 0:
             return
@@ -592,7 +595,7 @@ class ScopusSpider(scrapy.Spider):
         total_results = int(tree.find(f".//{{{prefix_dict['ns1']}}}totalResults").text)
         self.logger.info(f"parse_mouth_rec total {total_results} url {url}")
         #self.logger.info(f"header {response.request.headers.get('User-Agent')}")
-        response.request.headers['User-Agent'] = self.ua.random
+        response.request.headers['User-Agent'] = random.choice(self.lines)
 
         if total_results == 0:
             return
@@ -643,7 +646,7 @@ class ScopusSpider(scrapy.Spider):
         total_results = int(tree.find(f".//{{{prefix_dict['ns1']}}}totalResults").text)
         self.logger.info(f"parse_countries url {total_results} {url}  ")
         #self.logger.info(f"header {response.request.headers.get('User-Agent')}")
-        response.request.headers['User-Agent'] = self.ua.random
+        response.request.headers['User-Agent'] = random.choice(self.lines)
 
         if total_results == 0:
             return
@@ -673,7 +676,7 @@ class ScopusSpider(scrapy.Spider):
         total_results = int(tree.find(f".//{{{prefix_dict['ns1']}}}totalResults").text)
         self.logger.info(f"parse_countries_rec total {total_results} url {url}")
         #self.logger.info(f"header {response.request.headers.get('User-Agent')}")
-        response.request.headers['User-Agent'] = self.ua.random
+        response.request.headers['User-Agent'] = random.choice(self.lines)
 
         if total_results == 0:
             return
@@ -726,7 +729,7 @@ class ScopusSpider(scrapy.Spider):
         total_results = int(tree.find(f".//{{{prefix_dict['ns1']}}}totalResults").text)
         self.logger.info(f"parse_authfirst total {total_results} url {url}")
         #self.logger.info(f"header {response.request.headers.get('User-Agent')}")
-        response.request.headers['User-Agent'] = self.ua.random
+        response.request.headers['User-Agent'] = random.choice(self.lines)
 
         if total_results == 0:
             return
@@ -758,7 +761,7 @@ class ScopusSpider(scrapy.Spider):
         total_results = int(tree.find(f".//{{{prefix_dict['ns1']}}}totalResults").text)
         self.logger.info(f"parse_authfirst_rec url {total_results} {url}")
         #self.logger.info(f"header {response.request.headers.get('User-Agent')}")
-        response.request.headers['User-Agent'] = self.ua.random
+        response.request.headers['User-Agent'] = random.choice(self.lines)
 
         if total_results == 0:
             return
@@ -806,7 +809,7 @@ class ScopusSpider(scrapy.Spider):
         subj = response.meta['subj']
         date = response.meta['date']
 
-        response.request.headers['User-Agent'] = self.ua.random
+        response.request.headers['User-Agent'] = random.choice(self.lines)
         total_results = int(tree.find(f".//{{{prefix_dict['ns1']}}}totalResults").text)
         self.logger.info(f"parse_start {url}")
 
@@ -937,4 +940,3 @@ class ScopusSpider(scrapy.Spider):
             result['author'] = getattr(articles[article].find(f"./{{{prefix_dict['dc']}}}creator"), 'text', None)
             result['journal'] = journal_item
             yield result
-
